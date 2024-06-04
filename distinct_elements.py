@@ -1,6 +1,8 @@
 import math
 import random
 
+
+# approximates the number of distinct elements in the stream A
 def Fsub0(A, ep, d):
     p = 1
     X = set()
@@ -15,8 +17,9 @@ def Fsub0(A, ep, d):
         if(random.random() < p): # with probability p
             X.add(a_i) # X <- X U {a_i}
             
+        # X will not grow larger than the threshold
         if len(X) == thresh:
-            X = throw_away(X)
+            X = filter_half_randomly(X)
             p = p/2
             if len(X) == thresh:
                 return len(X)
@@ -24,7 +27,7 @@ def Fsub0(A, ep, d):
     return len(X) / p
 
         
-def throw_away(S): # s is a for "set" ! :D
+def filter_half_randomly(S): # s is a for "set" !
     for elem in S:
         if(random.random() >= 0.5):
             S.remove(elem)
@@ -34,14 +37,14 @@ def throw_away(S): # s is a for "set" ! :D
 
 def main():
 
-    # build up a set of random values
+    # build up a "stream" of random values.  Of course it's not really a stream, but a list.
     A = []
     while(len(A) != 200):
         A.append(random.randint(0, 5))
 
     estimated_size = Fsub0(A, 0.98, 0.98)
     print("A: "  + str(A))
-    print("Estimated size of A: " + str(estimated_size))
+    print("Estimated number of distinct (unique) elements in A: " + str(estimated_size))
     
 
 main()
